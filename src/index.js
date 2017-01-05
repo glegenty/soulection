@@ -1,3 +1,3 @@
-import MyComponent from './components/MyComp'
-
-var test = new MyComponent()
+import MyComponent from 'components\\MyComp'
+import 'styl/index.styl'
+let test = new MyComponent()
