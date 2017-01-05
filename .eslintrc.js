@@ -1,0 +1,86 @@
+module.exports = {
+  root: true,
+  parser: 'babel-eslint',
+  parserOptions: {
+    sourceType: 'module'
+  },
+  extends: 'standard',
+  // required to lint *.vue files
+  plugins: [
+    'html'
+  ],
+  // add your custom rules here
+  'rules': {
+    // allow paren-less arrow functions
+    'arrow-parens': 0,
+    "no-unused-vars": 0,
+    'no-trailing-spaces': 0,
+    // allow async-await
+    'generator-star-spacing': 0,
+    // allow debugger during development
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+  },
+  "globals": {
+    "PreventGhostClick": true,
+    "safari": true,
+    "XMLHttpRequest": true,
+    "alert": true,
+    "sensors": true,
+    "device": true,
+    "cordova": true,
+    "Camera": true,
+    "CameraPreview": true,
+    "FileReader": true,
+    "LocalFileSystem": true,
+    "__DEV__": true,
+    "__PROD__": true,
+    "THREE": true,
+    "Share": true,
+    "VERSION": true,
+    "requirejs": true,
+    "React": true,
+    "$": true,
+    "Piwik": true,
+    "ATInternet": true,
+    "Vue": true,
+    "makeVideoPlayableInline": true,
+    "CCST": true,
+    "Drawww": true,
+    "Detector": true,
+    "FPSMeter": true,
+    "Visibility": true,
+    "WebFont": true,
+    "TimelineLite": false,
+    "TimelineMax": false,
+    "TweenLite": false,
+    "TweenMax": false,
+    "Back": false,
+    "Bounce": false,
+    "Circ": false,
+    "Cubic": false,
+    "Ease": false,
+    "EaseLookup": false,
+    "Elastic": false,
+    "Expo": false,
+    "Linear": false,
+    "Power0": false,
+    "Power1": false,
+    "Power2": false,
+    "Power3": false,
+    "Power4": false,
+    "Quad": false,
+    "Quart": false,
+    "Quint": false,
+    "RoughEase": false,
+    "Sine": false,
+    "SlowMo": false,
+    "SteppedEase": false,
+    "Strong": false,
+    "Draggable": false,
+    "SplitText": false,
+    "VelocityTracker": false,
+    "CSSPlugin": false,
+    "ThrowPropsPlugin": false,
+    "BezierPlugin": false
+  }
+}
