@@ -47,12 +47,14 @@ export default function (audiosource) {
     object.children[2].name = 'faceB'
     var edges = new THREE.EdgesHelper(object.children[2], 0x000000)
     var edges2 = new THREE.EdgesHelper(object.children[1], 0x000000)
+    // edges.scale.set(0.05, 0.05, 0.05)
+    // edges2.scale.set(0.05, 0.05, 0.05)
     object.name = 'logo'
 
+    object.add(edges)
+    object.add(edges2)
     logo.add(object)
-  // scene.add(edges);
-  // scene.add(edges2);
-  // console.log(scene.getObjectByName('faceA').material);
+    // console.log(scene.getObjectByName('faceA').material)
   })
 
   scene.add(logo)
