@@ -21,6 +21,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   },
   "globals": {
+    "SC": true,
     "PreventGhostClick": true,
     "safari": true,
     "XMLHttpRequest": true,

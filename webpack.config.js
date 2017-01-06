@@ -1,12 +1,14 @@
 var path = require('path')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 var ROOT_PATH = path.resolve(__dirname)
 var ENTRY_PATH = path.resolve(ROOT_PATH, 'src/index.js')
 var SRC_PATH = path.resolve(ROOT_PATH, 'src')
-var STATIC_PATH = path.resolve(ROOT_PATH, '../static')
-var COMPONENTS_PATH = path.resolve(ROOT_PATH, '../src/components')
+var STATIC_PATH = path.resolve(ROOT_PATH, 'static')
+var VENDOR_PATH = path.resolve(ROOT_PATH, 'vendor')
+var COMPONENTS_PATH = path.resolve(ROOT_PATH, 'src/components')
 var STYL_PATH = path.resolve(ROOT_PATH, 'src/styl')
+var LIB_PATH = path.resolve(ROOT_PATH, 'src/lib')
 var TEMPLATE_PATH = path.resolve(ROOT_PATH, 'src/index.html')
 var SHADER_PATH = path.resolve(ROOT_PATH, 'src/shaders')
 var BUILD_PATH = path.resolve(ROOT_PATH, 'dist')
@@ -19,7 +21,25 @@ module.exports = {
       title: 'WebGL Project Boilerplate',
       template: TEMPLATE_PATH,
       inject: 'body'
-    })
+    }),
+    new BrowserSyncPlugin(
+      // BrowserSync options
+      {
+        // browse to http://localhost:3000/ during development
+        host: 'localhost',
+        port: 3000,
+        // proxy the Webpack Dev Server endpoint
+        // (which should be serving on http://localhost:3100/)
+        // through BrowserSync
+        proxy: 'http://localhost:8080/'
+      },
+      // plugin options
+      {
+        // prevent BrowserSync from reloading the page
+        // and let Webpack Dev Server take care of this
+        reload: false
+      }
+    )
   ],
   output: {
     path: BUILD_PATH,
@@ -30,7 +50,9 @@ module.exports = {
     fallback: [path.join(__dirname, '../node_modules')],
     alias: {
       'static': STATIC_PATH,
+      'vendor': VENDOR_PATH,
       'components': COMPONENTS_PATH,
+      'lib': STYL_PATH,
       'styl': STYL_PATH
     }
   },
