@@ -1,2 +1,387 @@
-.test
-  color blue
+@font-face
+	font-family: Proxima;
+	src: url(/static/fonts/proximanova-semibold-webfont.ttf);
+
+cream = #f1f1e5
+blue = #6b97ba
+
+canvas
+	display: block;
+	position: fixed;
+	z-index: -5;
+	top: 0
+
+#infoArtist, #infoTrack
+	font-size: 0.875em
+
+a
+	text-decoration: none;
+	color: inherit
+
+a:hover
+	color: #C3B1A1
+
+input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active, input:-webkit-autofill
+	-webkit-text-fill-color: blue !important
+	background-color: cream !important
+	-webkit-box-shadow: 0 0 0px 1000px cream inset;
+
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill
+	-webkit-text-fill-color: blue !important
+	background-color: cream !important
+	-webkit-box-shadow: 0 0 0px 1000px cream inset;
+
+.round-button
+	border-radius: 50%;
+	background-color: rgb(241, 241, 229);
+	box-shadow: 0px 9px 12.78px 5.22px rgba(0, 0, 0, 0.09);
+	position: absolute;
+	margin-left: -30px
+	margin-top: -50px
+	//left: 128px;
+	//top: 40px;
+	width: 54px;
+	height: 54px;
+	z-index: 123;
+	cursor: pointer
+	overflow: hidden
+	display: inline-block
+
+.play-wrapper
+	position: relative
+	width: 26px;
+	height: 26px;
+	margin-left: 14px;
+	margin-top: 13px;
+	transition: all 0.25s ease
+
+.left
+	height: 100%
+	float: left
+	background-color: blue;
+	width: 36%
+	transition: all 0.25s ease
+	overflow: hidden
+
+.right
+	height: 100%
+	float: right
+	width: 36%
+	background-color: blue;
+	transition: all 0.25s ease
+
+.triangle-1
+	transform: translate(0, -100%)
+.triangle-2
+	transform: translate(0, 100%)
+
+.triangle-1,
+.triangle-2
+	position: absolute
+	top: 0
+	right: 0
+	background-color: transparent
+	width: 0
+	height: 0
+	border-right: 26px solid cream
+	border-top: 13px solid transparent
+	border-bottom: 13px solid transparent
+	transition: transform 0.25s ease
+
+.paused
+	.left
+		width: 50%
+	.right
+		width: 50%
+	.triangle-1
+		transform: translate(0, -50%)
+	.triangle-2
+		transform: translate(0, 50%)
+	.play-wrapper
+		margin-left: 17px
+
+#controlPanel
+	//background-color: blue
+	//box-shadow: 0px 10px 12.78px 5.22px rgba(0, 0, 0, 0.15);
+	position: relative;
+	width: 600px;
+	height: 105px;
+	//z-index: 95;
+	margin-top: 100px
+	margin-left: 50px
+
+.iconWrapper
+	margin-top: 5px
+	display: inline-block
+	position: relative
+	top: -25px
+	width: 26px;
+
+#control-plus
+	border-width: 1px;
+	border-color: cream;
+	border-style: solid;
+	border-radius: 50%;
+	position: relative;
+	width: 17px;
+	height: 17px;
+	z-index: 300;
+	margin-left: 7px
+	cursor: pointer
+	&:hover
+		background-color: cream
+		& .icon-menu
+			background-color: blue
+#trackInfoPanel
+	display: inline-block
+.icon-menu
+	background-color: cream
+	-webkit-mask:  url('/static/img/control-plus.svg') no-repeat 50% 50%;
+	//mask: url(icon.svg) no-repeat 50% 50%;
+	-webkit-mask-image: url('/static/img/control-plus.svg')
+	mask-image: url('/static/img/control-plus.svg')
+	height: 7px
+	width: 11px
+	margin-left: 2px
+	margin-left: 3px;
+	margin-top: 5px;
+	position: relative
+	display: block
+
+.background-control
+	background-color: blue
+	box-shadow: 0px 10px 12.78px 5.22px rgba(0, 0, 0, 0.15);
+	position: absolute;
+	width: 105px;
+	height: 105px;
+	z-index: 0;
+	display: inline
+
+
+.TrackInfoWrapper
+	display: inline-block
+	vertical-align: top;
+
+.ctrlWrapper
+	display: inline-block
+	position: relative
+	vertical-align: top;
+	margin-top: 15px;
+	margin-left: 5px
+
+#timelineWrapper, .volumeWrapper
+	display: inline-block
+	vertical-align: top;
+.volumeWrapper
+	margin-left: 20px
+
+.time
+	font-family: Proxima
+	font-size: 0.688em
+	position: relative
+	top: 10px
+	color: cream
+
+#currentTime
+	display: inline-block
+
+#totalTime
+	display: inline-block
+	float: right
+
+#timeline
+	width: 280px;
+	height: 2px;
+	background: #b1c6d0;
+	//margin-top: 20px;
+	float: left;
+	border-radius: 15px;
+	position: relative
+	cursor: pointer
+.icon-vol
+	//background-color: cream
+	//-webkit-mask:  url('volume.svg') no-repeat 50% 50%;
+	//mask: url(icon.svg) no-repeat 50% 50%;
+	//-webkit-mask-image: url('volume.svg')
+	//mask-image: url('volume.svg')
+	background-image: url('/static/img/volume.png')
+	height: 17px
+	width: 19px
+	display: inline-block
+	vertical-align: top
+	top: -6px
+	position: relative
+
+
+#volumeline
+	width: 50px;
+	height: 2px;
+	background: #b1c6d0;
+	//margin-top: 20px;
+	//float: left;
+	vertical-align: top
+	border-radius: 15px;
+	position: relative
+	cursor: pointer
+	display: inline-block
+
+#playheadTl, #volHead
+	width: 4px;
+	height: 16px;
+	top: -7px;
+	background: cream;
+	position: absolute
+
+#currentTl,#currentVol
+	height: 2px;
+	background: cream;
+	float: left;
+	width: 0;
+
+
+#infoImage
+	position: relative
+	box-shadow: 0px 10px 12.78px 5.22px rgba(0, 0, 0, 0.15);
+	width: 105px
+	height: 105px
+	margin-left: 0px
+	display: inline-block;
+	top: -30px
+
+.infoAT
+	display: inline-block
+	position: relative
+	z-index: 50
+	height: 30px
+	vertical-align: top;
+	margin-top: 8px;
+	margin-left: 5px
+	width: 280px;
+	overflow: hidden
+#infoArtist
+	font-family: Proxima
+	color: blue
+	text-decoration: none;
+
+#infoTrack
+	font-family: Proxima
+	color: blue
+
+.big-play
+	background-color: blue
+	-webkit-mask:  url('/static/img/big-play.svg') no-repeat 50% 50%;
+	//mask: url(icon.svg) no-repeat 50% 50%;
+	-webkit-mask-image: url('/static/img/big-play.svg')
+	mask-image: url('/static/img/big-play.svg')
+	height: 54px
+	width: 54px
+	margin-left: 2px
+	display: inline-block
+
+#form
+	background-color: rgb(107, 151, 186);
+	box-shadow: 0px 10px 12.78px 5.22px rgba(0, 0, 0, 0.15);
+	position: relative
+	//width: 270px;
+	width: 26px;
+	height: 46px;
+	z-index: 149;
+	margin-top: 6px
+	overflow: hidden;
+	//top: -85px;
+
+#form.disable
+	background-color: transparent
+	box-shadow: none
+
+#input
+	background-color: rgb(241, 241, 229) ;
+	position: relative;
+	top: -7px
+	margin-left: 5px
+	width: 193px;
+	height: 28px;
+	z-index: 196;
+	//display: inline-block
+	display: none
+	appearance: none;
+	box-shadow: none;
+	border-radius: none;
+	border: none;
+	outline: none;
+	font-family: Proxima
+	color: blue
+	padding-left: 5px
+	// &:placeholder
+
+.url-box
+	border-width: 1px;
+	border-color: cream;
+	border-style: solid;
+	border-radius: 9px;
+	width: 17px;
+	height: 35px;
+	z-index: 210;
+	display: inline-block
+	font-family: Proxima
+	color: cream
+	font-size: 9px
+	text-align: center
+	padding-top: 3px
+	margin-left: 7px
+	//margin-top: 5px
+	cursor: pointer
+	position: relative
+	top: 3px
+
+	&:hover
+		background-color: cream
+		color: blue
+
+#submit
+	position: relative
+	border-width: 1px;
+	border-color: rgb(241, 241, 229);
+	border-style: solid;
+	border-radius: 50%;
+	background-color: rgb(107, 151, 186);
+	width: 26px;
+	height: 26px;
+	z-index: 200;
+	top: -7px
+	margin-left: 5px
+	cursor: pointer
+	//display: inline-block
+	display: none
+	&:hover
+		background-color: cream
+		& .icon-play
+			background-color: blue
+.icon-play
+	//background-image: url('submit.svg')
+	background-color: cream
+	-webkit-mask:  url('/static/img/submit.svg') no-repeat 50% 50%;
+	//mask: url(icon.svg) no-repeat 50% 50%;
+	-webkit-mask-image: url('/static/img/submit.svg')
+	mask-image: url('/static/img/submit.svg')
+	height: 11px
+	width: 11px
+	display: inline-block
+
+.credit
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	font-family: Proxima;
+	color: blue
+
+.nonselectable
+	-webkit-user-select: none;
+	-khtml-user-drag: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-moz-user-select: -moz-none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;

@@ -3,7 +3,6 @@ import createLoop from 'canvas-loop'
 import dat from 'dat-gui'
 var OBJLoader = require('three-obj-loader')
 OBJLoader(THREE)
-console.log(OBJLoader)
 const obj = 'static/obj/soulection_logo3.obj'
 export default function (audiosource) {
   const canvas = document.querySelector('canvas')

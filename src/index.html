@@ -1,28 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Soulectionizer</title>
+	<meta charset="UTF-8">
+	<title>Soulection Player</title>
+
 </head>
 <body>
-  <div id="controlPanel" >
-    <div id="tab"><a href="#" id="toggleButton"><i class="icon-menu"></i></a></div>
+<canvas id="webgl"></canvas>
+<div id="controlPanel" >
+	<div class="background-control"></div>
+	<div class="iconWrapper">
+	    <div id="control-plus"><i class="icon-menu"></i></div>
+	    <form id="form" class="disable">
+	        <div id="toggleURL"class="url-box">U<br>R<br>L</div>
+	        <input id="input" placeholder="Paste Soundcloud URL here (https://soundcloud.com/artist/track)">
+	        <button type="submit" id="submit"><i class="icon-play"></i></button><br>
+	    </form>
+    </div>
     <div id="trackInfoPanel" class="hidden">
         <img id="infoImage" src="">
-        <div id="infoArtist"></div>
-        <div id="infoTrack"></div>
+		<div class="TrackInfoWrapper">
+			<div class="playInfoWrapper">
+				<div id="play" class="play round-button" >
+					<div class="play-wrapper">
+						<div class="left"></div>
+						<div class="right"></div>
+						<div class="triangle-1"></div>
+						<div class="triangle-2"></div>
+					</div>
+			    <!-- <i class="big-play"></i> -->
+			    </div>
+				<div class="infoAT">
+					<div id="infoArtist"></div>
+					<div id="infoTrack"></div>
+				</div>
+			</div>
+			<div class="ctrlWrapper">
+				<div id="timelineWrapper">
+					<div id="timeline">
+						<div id="currentTl"></div>
+						<div id="playheadTl"></div>
+					</div>
+					<div class="time">
+						<div id="currentTime">00:00</div>
+						<div id="totalTime">00:00</div>
+					</div>
+				</div>
+				<div class="volumeWrapper">
+					<i class="icon-vol"></i>
+					<div id="volumeline">
+						<div id="currentVol"></div>
+						<div id="volHead"></div>
+					</div>
+				</div>
+			</div>
+		</div>
     </div>
+    <button id="ND">Night / Day</button>
+</div>
+
     <div id="playerControls">
-        <form id="form">
-            <input id="input" placeholder="Paste Soundcloud URL here (https://soundcloud.com/artist/track)">
-            <button type="submit" id="submit"><i class="icon-play"></i></button><br>
-        </form>
-        <audio id="player" controls="" autoplay="" preload autobuffer></audio>
+        <audio id="player" autoplay="" preload autobuffer></audio>
     </div>
 </div>
-<canvas></canvas>
-<script src="vendor/three.js" charset="utf-8"></script>
+<div class="credit"> made with love by <a target="FLVXVS" href="https://twitter.com/flvxvs" style="color:#C3B1A1">FLVXVS</a> and <span style="color:#C3B1A1">Nuit Noire</span></div>
+
+	<div id="app"></div>
+	<script src="/vendor/sdk.js"></script>
+	<script src="/vendor/three.js"></script>
 </body>
 </html>
