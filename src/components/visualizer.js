@@ -1,4 +1,3 @@
-const fs = require('fs')
 import createLoop from 'canvas-loop'
 import dat from 'dat-gui'
 var OBJLoader = require('three-obj-loader')
@@ -15,8 +14,8 @@ export default function (audiosource) {
     devicePixelRatio: window.devicePixelRatio
   })
 
-  renderer.setClearColor(0x97c2c5, 1)
-  // renderer.setClearColor(0x000000, 1);
+  // renderer.setClearColor(0x97c2c5, 1)
+  renderer.setClearColor(0x000000, 1)
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 100)
   camera.position.set(0, 0, 50)
@@ -32,8 +31,6 @@ export default function (audiosource) {
     object.traverse(function (child) {
       if (child instanceof THREE.Mesh) {
         child.material = new THREE.MeshLambertMaterial({color: 0xffffff})
-        // var edges = new THREE.EdgesHelper( child, 0x000000 );
-        // scene.add(edges);
       }
     })
 
@@ -44,15 +41,23 @@ export default function (audiosource) {
     object.children[0].name = 'extrude'
     object.children[1].name = 'faceA'
     object.children[2].name = 'faceB'
-    var edges = new THREE.EdgesHelper(object.children[2], 0x000000)
-    var edges2 = new THREE.EdgesHelper(object.children[1], 0x000000)
-    // edges.scale.set(0.05, 0.05, 0.05)
-    // edges2.scale.set(0.05, 0.05, 0.05)
-    object.name = 'logo'
+    console.log(object)
+    var edges = new THREE.EdgesGeometry(object.children[2].geometry, 0xffffff)
+    // var edgeLine = new MeshLine()
+    // edgeLine.setGeometry(edges)
+    // var meshEdge = new THREE.Mesh(edgeLine.geometry, new MeshLineMaterial({linewidth: 5}))
 
-    object.add(edges)
-    object.add(edges2)
-    logo.add(object)
+    var edgeLine = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 20 }))
+    var edges2 = new THREE.EdgesGeometry(object.children[1].geometry)
+    var edgeLine2 = new THREE.LineSegments(edges2, new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 20 }))
+    edgeLine2.material.linewidth = 20
+    object.name = 'logo'
+    var edgesObj = new THREE.Object3D()
+    edgesObj.scale.set(0.05, 0.05, 0.05)
+
+    edgesObj.add(edgeLine)
+    edgesObj.add(edgeLine2)
+    logo.add(edgesObj)
     // console.log(scene.getObjectByName('faceA').material)
   })
 
@@ -73,63 +78,9 @@ export default function (audiosource) {
     // add the output of the renderer to the html element
 
   camera.lookAt(logo)
-  /*
-  var controls = new function () {
-    this.rotationSpeed = 0.02;
-    this.bouncingSpeed = 0.03;
-  };
-  var gui = new dat.GUI();
-  gui.add(controls, 'rotationSpeed', 0.0, 0.5);
-  gui.add(controls, 'bouncingSpeed', 0.0, 0.5);
-*/
-/*
-    var controls = new function () {
+  createApp()
 
-            this.amount = 2;
-            this.bevelThickness = 2;
-            this.bevelSize = 0.5;
-            this.bevelEnabled = true;
-            this.bevelSegments = 3;
-            this.bevelEnabled = true;
-            this.curveSegments = 12;
-            this.steps = 1;
-
-            this.asGeom = function () {
-                // remove the old plane
-                scene.remove(logo);
-                // create a new one
-
-                var options = {
-                    amount: controls.amount,
-                    bevelThickness: controls.bevelThickness,
-                    bevelSize: controls.bevelSize,
-                    bevelSegments: controls.bevelSegments,
-                    bevelEnabled: controls.bevelEnabled,
-                    curveSegments: controls.curveSegments,
-                    steps: controls.steps
-                };
-
-                logo = createMesh(new THREE.ExtrudeGeometry(geometry, options));
-                // add it to the scene.
-                scene.add(logo);
-            };
-
-        };
-
-        var gui = new dat.GUI();
-        gui.add(controls, 'amount', 0, 20).onChange(controls.asGeom);
-        gui.add(controls, 'bevelThickness', 0, 10).onChange(controls.asGeom);
-        gui.add(controls, 'bevelSize', 0, 10).onChange(controls.asGeom);
-        gui.add(controls, 'bevelSegments', 0, 30).step(1).onChange(controls.asGeom);
-        gui.add(controls, 'bevelEnabled').onChange(controls.asGeom);
-        gui.add(controls, 'curveSegments', 1, 30).step(1).onChange(controls.asGeom);
-        gui.add(controls, 'steps', 1, 5).step(1).onChange(controls.asGeom);
-
-        controls.asGeom();
-*/
-  createApp(logo)
-
-  function createApp (logo, material) {
+  function createApp (material) {
   // console.log(controls.rotationSpeed);
     const app = createLoop(canvas, { scale: renderer.devicePixelRatio })
     .start()
@@ -143,7 +94,6 @@ export default function (audiosource) {
       camera.updateProjectionMatrix()
       render()
     }
-
     function render () {
       logo.scale.x = 0.5 + audiosource.volume / 10000
       logo.scale.y = 0.5 + audiosource.volume / 10000

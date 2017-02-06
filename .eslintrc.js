@@ -21,6 +21,8 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   },
   "globals": {
+    "MeshLine": true,
+    "MeshLineMaterial": true,
     "SC": true,
     "PreventGhostClick": true,
     "safari": true,
