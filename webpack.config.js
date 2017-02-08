@@ -9,8 +9,9 @@ var VENDOR_PATH = path.resolve(ROOT_PATH, 'vendor')
 var COMPONENTS_PATH = path.resolve(ROOT_PATH, 'src/components')
 var STYL_PATH = path.resolve(ROOT_PATH, 'src/styl')
 var LIB_PATH = path.resolve(ROOT_PATH, 'src/lib')
+var GLSL_PATH = path.resolve(ROOT_PATH, 'src/glsl')
 var TEMPLATE_PATH = path.resolve(ROOT_PATH, 'src/index.html')
-var SHADER_PATH = path.resolve(ROOT_PATH, 'src/shaders')
+var SHADERS_PATH = path.resolve(ROOT_PATH, 'src/shaders')
 var BUILD_PATH = path.resolve(ROOT_PATH, 'dist')
 var debug = process.env.NODE_ENV !== 'production'
 
@@ -52,8 +53,9 @@ module.exports = {
       'static': STATIC_PATH,
       'vendor': VENDOR_PATH,
       'components': COMPONENTS_PATH,
-      'lib': STYL_PATH,
-      'styl': STYL_PATH
+      'lib': LIB_PATH,
+      'styl': STYL_PATH,
+      'shaders': SHADERS_PATH
     }
   },
   module: {
@@ -69,8 +71,28 @@ module.exports = {
     },
     {
       test: /\.glsl$/,
-      include: SHADER_PATH,
+      include: SHADERS_PATH,
       loader: 'webpack-glsl'
+    },
+    {
+      test: /\.fs$/,
+      include: SHADERS_PATH,
+      loader: 'webpack-glsl'
+    },
+    // {
+    //   test: /\.vs$/,
+    //   include: SHADERS_PATH,
+    //   loader: 'webpack-glsl'
+    // },
+    {
+      test: /\.(glsl|frag|vert)$/,
+      loader: 'raw',
+      include: SHADERS_PATH
+    },
+    {
+      test: /\.(glsl|frag|vert)$/,
+      loader: 'glslify',
+      include: SHADERS_PATH
     },
     {
       test: /\.styl$/,

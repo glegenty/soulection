@@ -43,8 +43,11 @@
   "dependencies": {
     "canvas-loop": "^1.0.7",
     "dat-gui": "^0.5.0",
+    "glsl-fast-gaussian-blur": "^1.0.2",
+    "glslify-loader": "^1.0.2",
     "gsap": "^1.19.0",
     "jquery": "^3.1.1",
+    "raw-loader": "^0.5.1",
     "three": "^0.83.0",
     "three-obj-loader": "^1.0.2"
   }
