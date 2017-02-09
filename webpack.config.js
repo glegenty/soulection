@@ -79,21 +79,21 @@ module.exports = {
       include: SHADERS_PATH,
       loader: 'webpack-glsl'
     },
+    {
+      test: /\.vs$/,
+      include: SHADERS_PATH,
+      loader: 'webpack-glsl'
+    },
     // {
-    //   test: /\.vs$/,
-    //   include: SHADERS_PATH,
-    //   loader: 'webpack-glsl'
+    //   test: /\.(glsl|frag|vert)$/,
+    //   loader: 'raw',
+    //   include: SHADERS_PATH
     // },
-    {
-      test: /\.(glsl|frag|vert)$/,
-      loader: 'raw',
-      include: SHADERS_PATH
-    },
-    {
-      test: /\.(glsl|frag|vert)$/,
-      loader: 'glslify',
-      include: SHADERS_PATH
-    },
+    // {
+    //   test: /\.(glsl|frag|vert|vs|fs)$/,
+    //   loader: 'glslify',
+    //   include: SHADERS_PATH
+    // },
     {
       test: /\.styl$/,
       loader: 'style!css!stylus',
