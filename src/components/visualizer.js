@@ -4,7 +4,8 @@ import Logo from './logo'
 import Bloom from './bloom'
 var OBJLoader = require('three-obj-loader')
 OBJLoader(THREE)
-const obj = 'static/obj/soulection_logo_sub2.obj'
+// const obj = 'static/obj/soulection_logo_sub2.obj'
+const obj = 'static/obj/six2_center_sub.obj'
 const clock = new THREE.Clock()
 const fragment = require('shaders/logoFrag.glsl')
 const vertex = require('shaders/logoVert.glsl')
