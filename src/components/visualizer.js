@@ -132,12 +132,12 @@ export default function (audiosource) {
       logo.scale.y = 1 + audiosource.volume / 10000
       logo.scale.z = 1 + audiosource.volume / 10000
       // logo.rotation.y = 7.85;
-      if (logo.rotation.y > 1.56 && logo.rotation.y < 4.70) {
-      // console.log('turn');
-        logo.rotation.y = 4.71
-      } else if (logo.rotation.y >= 7.85) {
-        logo.rotation.y = 1.57
-      }
+      // if (logo.rotation.y > 1.56 && logo.rotation.y < 4.70) {
+      // // console.log('turn');
+      //   logo.rotation.y = 4.71
+      // } else if (logo.rotation.y >= 7.85) {
+      //   logo.rotation.y = 1.57
+      // }
       logo.rotation.y += 0.005
       // console.log(logo.rotation.y);
       // console.log(audiosource.bass );
