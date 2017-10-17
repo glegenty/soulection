@@ -1,6 +1,6 @@
 @font-face {
   font-family: Proxima;
-  src: url("/static/assets/fonts/proximanova-semibold-webfont.ttf");
+  src: url("./static/assets/fonts/proximanova-semibold-webfont.ttf");
 }
 html {
   height: 100%;
@@ -171,9 +171,9 @@ select:-webkit-autofill {
 }
 .icon-menu {
   background-color: #fcf5d8;
-  -webkit-mask: url("/static/assets/img/control-plus.svg") no-repeat 50% 50%;
-  -webkit-mask-image: url("/static/assets/img/control-plus.svg");
-  mask-image: url("/static/assets/img/control-plus.svg");
+  -webkit-mask: url("./static/assets/img/control-plus.svg") no-repeat 50% 50%;
+  -webkit-mask-image: url("./static/assets/img/control-plus.svg");
+  mask-image: url("./static/assets/img/control-plus.svg");
   height: 7px;
   width: 11px;
   margin-left: 2px;
@@ -236,7 +236,7 @@ select:-webkit-autofill {
   cursor: pointer;
 }
 .icon-vol {
-  background-image: url("/static/assets/img/volume2.png");
+  background-image: url("./static/assets/img/volume2.png");
   height: 17px;
   width: 19px;
   display: inline-block;
@@ -302,9 +302,9 @@ select:-webkit-autofill {
 }
 .big-play {
   background-color: #c04f3d;
-  -webkit-mask: url("/static/assets/img/big-play.svg") no-repeat 50% 50%;
-  -webkit-mask-image: url("/static/assets/img/big-play.svg");
-  mask-image: url("/static/assets/img/big-play.svg");
+  -webkit-mask: url("./static/assets/img/big-play.svg") no-repeat 50% 50%;
+  -webkit-mask-image: url("./static/assets/img/big-play.svg");
+  mask-image: url("./static/assets/img/big-play.svg");
   height: 54px;
   width: 54px;
   margin-left: 2px;
@@ -393,9 +393,9 @@ select:-webkit-autofill {
 }
 .icon-play {
   background-color: #fcf5d8;
-  -webkit-mask: url("/static/assets/img/submit.svg") no-repeat 50% 50%;
-  -webkit-mask-image: url("/static/assets/img/submit.svg");
-  mask-image: url("/static/assets/img/submit.svg");
+  -webkit-mask: url("./static/assets/img/submit.svg") no-repeat 50% 50%;
+  -webkit-mask-image: url("./static/assets/img/submit.svg");
+  mask-image: url("./static/assets/img/submit.svg");
   height: 11px;
   width: 11px;
   display: inline-block;
