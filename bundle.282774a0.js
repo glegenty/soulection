@@ -45863,7 +45863,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(59);
+__webpack_require__(61);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
@@ -45885,23 +45885,23 @@ var _index = __webpack_require__(18);
 
 var _index2 = _interopRequireDefault(_index);
 
-var _PlayerC = __webpack_require__(53);
+var _PlayerC = __webpack_require__(55);
 
 var _PlayerC2 = _interopRequireDefault(_PlayerC);
 
-__webpack_require__(56);
+__webpack_require__(58);
 
-var _SoundcloudApi = __webpack_require__(57);
+var _SoundcloudApi = __webpack_require__(59);
 
 var _SoundcloudApi2 = _interopRequireDefault(_SoundcloudApi);
 
-var _SCAudioSource = __webpack_require__(60);
+var _SCAudioSource = __webpack_require__(62);
 
 var _SCAudioSource2 = _interopRequireDefault(_SCAudioSource);
 
-__webpack_require__(61);
+__webpack_require__(63);
 
-var _audioAnalyser = __webpack_require__(62);
+var _audioAnalyser = __webpack_require__(64);
 
 var _audioAnalyser2 = _interopRequireDefault(_audioAnalyser);
 
@@ -46229,6 +46229,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var fragment = __webpack_require__(7);
 var vertex = __webpack_require__(8);
+var bgVert = __webpack_require__(53);
+var bgFrag = __webpack_require__(54);
 
 var OBJLoader = __webpack_require__(9);
 OBJLoader(THREE);
@@ -46254,8 +46256,9 @@ exports.default = function () {
     alpha: true
   });
   renderer.setSize(window.innerWidth, window.innerHeight, false);
-  renderer.setClearColor(0xFFFFFF, 0.0);
+  renderer.setClearColor(0x341C24, 1.0);
   renderer.toneMapping = THREE.LinearToneMapping;
+  renderer.autoClear = true;
 
   function initRaycaster() {
     raycaster = new THREE.Raycaster();
@@ -46270,6 +46273,15 @@ exports.default = function () {
       }
     };
   }
+  var bgScene = new THREE.Scene();
+  var planeGeo = new THREE.PlaneGeometry(180, 150);
+  var planeMat = new THREE.ShaderMaterial({
+    vertexShader: bgVert,
+    fragmentShader: bgFrag
+  });
+  var background = new THREE.Mesh(planeGeo, planeMat);
+  background.position.z = -100;
+  scene.add(background);
 
   document.addEventListener('mousemove', function (e) {
     e.preventDefault();
@@ -46292,6 +46304,8 @@ exports.default = function () {
       // renderer.render(scene, camera)
       _particles2.default.render(audio, camera);
       _bloom2.default.render();
+
+      // renderer.render(bgScene,camera)
     },
     resize: function resize(audio) {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -46397,7 +46411,7 @@ exports.default = function () {
     renderer.toneMapping = THREE.ReinhardToneMapping;
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
-    initDatGUI();
+    // initDatGUI()
   }
 
   function initDatGUI() {
@@ -53635,6 +53649,7 @@ exports.default = function () {
   var pMaterial = null;
   var particlesPos = [];
   var frustum = new THREE.Frustum();
+  var zOrign = -50;
   function initParticles() {
     particles = new THREE.Geometry();
     var txCanvas = document.createElement('canvas');
@@ -53701,10 +53716,9 @@ exports.default = function () {
         var step = 0;
         var x = centerx + Math.cos(angle) * random;
         var y = centery + Math.sin(angle) * random;
-        var _particle = new THREE.Vector3(x * k, y * k, angle);
+        var _particle = new THREE.Vector3(x * k, y * k, angle + zOrign);
         // console.log(angle)
         particles.vertices.push(_particle);
-        particlesPos.push(new THREE.Vector3(x * k, y * k, angle));
       }
     }
     _particleSystem = new THREE.Points(particles, pMaterial);
@@ -53719,7 +53733,7 @@ exports.default = function () {
 
       _particleSystem.rotation.z += 0.0008;
       // particleSystem.translateZ(0.05)
-      _particleSystem.material.size = Math.max(.2, Math.min(audio[1].strength / 2, .5));
+      _particleSystem.material.size = Math.max(.2, Math.min(audio[1].strength / 2, .8));
       particles.verticesNeedUpdate = true;
       _particleSystem.geometry.__dirtyVertices = true;
       camera.updateMatrix();
@@ -53729,8 +53743,8 @@ exports.default = function () {
       var count = 0;
       particles.vertices.forEach(function (particle) {
         particle.z += 0.05;
-        if (particle.z > 125) {
-          particle.z = -50;
+        if (particle.z > 70) {
+          particle.z = zOrign;
         }
 
         // console.log
@@ -53839,6 +53853,18 @@ exports.default = function () {
 
 /***/ }),
 /* 53 */
+/***/ (function(module, exports) {
+
+module.exports = "varying vec2 vUv;\r\n\r\nvoid main()\r\n{\r\n  vUv = uv;\r\n  vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );\r\n  gl_Position = projectionMatrix * mvPosition;\r\n}"
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports) {
+
+module.exports = "varying vec2 vUv;\r\n\r\n// uniform float time;\r\n// uniform vec2 mouse;\r\n// uniform vec2 resolution;\r\n\r\nvec4    u_color1 = vec4(20./255., 30./255., 48./255., 1.0);\r\nvec4    u_color2 = vec4(52./255., 28./255., 36./255., 1.0);\r\nvec4    u_color3 = vec4(0.0, 0.0, 0.0, 1.0);\r\nvec4    u_color4 = vec4(0.9, 0.0, 0.9, 1.0);\r\nfloat   u_colorStop1 = 0.1;\r\nfloat   u_colorStop2 = 0.4;\r\nfloat   u_colorStop3 = 0.8;\r\nfloat   u_colorStop4  = 10.;\r\n\r\nvec4 convertColor (vec4 color) {\r\n\r\n\treturn vec4((color.rgb /255.), 1.0);\r\n}\r\n\r\nvoid main(void)\r\n{\r\n  //   vec2 vUv = (gl_FragCoord.xy / resolution.xy) -0.5;\r\n\t// vUv.x *= resolution.x / resolution.y;\r\n    \r\n    vec2 uv = vUv.xy - 0.5;\r\n    vec2 pt = vec2( uv.x,  uv.y);\r\n    float t = sqrt( dot(pt, pt) );\r\n\r\n    vec4 color;\r\n    if (t < u_colorStop1)\r\n        color = u_color1;\r\n    else if (t < u_colorStop2)\r\n    {\r\n        float tLocal = (t - u_colorStop1)/(u_colorStop2 - u_colorStop1);\r\n        color = mix(u_color1,u_color2,tLocal);\r\n    }\r\n    else if (t < u_colorStop3)\r\n    {\r\n        float tLocal = (t - u_colorStop2)/(u_colorStop3 - u_colorStop2);\r\n        color = mix(u_color2,u_color3,tLocal);\r\n    }\r\n    else if (t < u_colorStop4)\r\n    {\r\n        float tLocal = (t - u_colorStop3)/(u_colorStop4 - u_colorStop3);\r\n        color = mix(u_color3,u_color4,tLocal);\r\n    }\r\n    else\r\n        color = u_color4;\r\n\r\n    gl_FragColor = color;\r\n}"
+
+/***/ }),
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -53850,11 +53876,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Controls = __webpack_require__(54);
+var _Controls = __webpack_require__(56);
 
 var _Controls2 = _interopRequireDefault(_Controls);
 
-var _InfosPanel = __webpack_require__(55);
+var _InfosPanel = __webpack_require__(57);
 
 var _InfosPanel2 = _interopRequireDefault(_InfosPanel);
 
@@ -53906,7 +53932,7 @@ var Player = function () {
 exports.default = Player;
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54230,7 +54256,7 @@ var Controls = function () {
 exports.default = Controls;
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -54352,7 +54378,7 @@ var InfosPanel = function () {
 exports.default = InfosPanel;
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -62321,7 +62347,7 @@ if (_gsScope._gsDefine) { _gsScope._gsQueue.pop()(); } //necessary in case Tween
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62333,7 +62359,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _soundcloud = __webpack_require__(58);
+var _soundcloud = __webpack_require__(60);
 
 var _soundcloud2 = _interopRequireDefault(_soundcloud);
 
@@ -62423,7 +62449,7 @@ var SoundcloudApi = function () {
 exports.default = SoundcloudApi;
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {!function(e,t){if(true)module.exports=t();else if("function"==typeof define&&define.amd)define([],t);else{var r=t();for(var n in r)("object"==typeof exports?exports:e)[n]=r[n]}}(this,function(){return function(e){function t(n){if(r[n])return r[n].exports;var o=r[n]={exports:{},id:n,loaded:!1};return e[n].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var r={};return t.m=e,t.c=r,t.p="",t(0)}([function(e,t,r){(function(t){"use strict";var n=r(4),o=r(8),i=r(3),a=r(9),s=r(2).Promise,u=r(16),l=r(17);e.exports=t.SC={initialize:function(){var e=arguments.length<=0||void 0===arguments[0]?{}:arguments[0];i.set("oauth_token",e.oauth_token),i.set("client_id",e.client_id),i.set("redirect_uri",e.redirect_uri),i.set("baseURL",e.baseURL),i.set("connectURL",e.connectURL)},get:function(e,t){return n.request("GET",e,t)},post:function(e,t){return n.request("POST",e,t)},put:function(e,t){return n.request("PUT",e,t)},delete:function(e){return n.request("DELETE",e)},upload:function(e){return n.upload(e)},connect:function(e){return a(e)},isConnected:function(){return void 0!==i.get("oauth_token")},oEmbed:function(e,t){return n.oEmbed(e,t)},resolve:function(e){return n.resolve(e)},Recorder:u,Promise:s,stream:function(e,t){return l(e,t)},connectCallback:function(){o.notifyDialog(this.location)}}}).call(t,function(){return this}())},function(e,t){e.exports=function(e){function t(n){if(r[n])return r[n].exports;var o=r[n]={exports:{},id:n,loaded:!1};return e[n].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var r={};return t.m=e,t.c=r,t.p="",t(0)}([function(e,t,r){e.exports={SCAudio:r(1),SCAudioPublicApiStreamURLRetriever:r(6),MaestroCore:r(2),MaestroLoaders:r(5),MaestroHTML5Player:r(4),MaestroHLSMSEPlayer:r(3)}},function(e,t,r){!function(t,n){e.exports=n(r(2),function(){try{return r(!function(){var e=new Error('Cannot find module "@sc/maestro-chromecast-player"');throw e.code="MODULE_NOT_FOUND",e}())}catch(e){}}(),function(){try{return r(!function(){var e=new Error('Cannot find module "@sc/maestro-flipper-player"');throw e.code="MODULE_NOT_FOUND",e}())}catch(e){}}(),function(){try{return r(3)}catch(e){}}(),function(){try{return r(4)}catch(e){}}(),r(5))}(this,function(e,t,r,n,o,i){return function(e){function t(n){if(r[n])return r[n].exports;var o=r[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var r={};return t.m=e,t.c=r,t.i=function(e){return e},t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=36)}([function(t,r){t.exports=e},function(e,t,r){"use strict";var n=this&&this.__extends||function(){var e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])};return function(t,r){function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}}();Object.defineProperty(t,"__esModule",{value:!0});var o=r(0),i=function(e){function t(t,r){void 0===r&&(r="API error.");var n=e.call(this,r)||this;return n.statusCode=t,n}return n(t,e),t.prototype.getCode=function(){return"SCAUDIO.API_ERROR."+(this.statusCode||"TIMEOUT")},t.prototype.getStatusCode=function(){return this.statusCode},t}(o.errors.PlayerFatalError);t.ApiError=i},function(e,t,r){"use strict";var n=this&&this.__extends||function(){var e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])};return function(t,r){function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}}();Object.defineProperty(t,"__esModule",{value:!0});var o=r(0),i=function(e){function t(t){return e.call(this,t||"There was no format available that a player was able to play.")||this}return n(t,e),t.prototype.getCode=function(){return"SCAUDIO.NOT_SUPPORTED_ERROR"},t}(o.errors.PlayerFatalError);t.NotSupportedError=i},function(e,t,r){"use strict";function n(e){return new i({startPos:0,endPos:e,startLevel:0,endLevel:1,fromEnd:!1})}function o(e){return new i({startPos:e,endPos:0,startLevel:1,endLevel:0,fromEnd:!0})}Object.defineProperty(t,"__esModule",{value:!0}),t.buildFadeIn=n,t.buildFadeOut=o;var i=function(){function e(e){var t=e.startPos,r=e.endPos,n=e.startLevel,o=e.endLevel,i=e.fromEnd,a=void 0!==i&&i;if(t<0)throw new Error("startPos invalid.");if(r<0||!a&&r<t||a&&t<r)throw new Error("endPos invalid.");if(n<0||n>1)throw new Error("startLevel invalid.");if(o<0||o>1)throw new Error("endLevel invalid.");this._startPos=t,this._endPos=r,this._startLevel=n,this._endLevel=o,this._fromEnd=a}return e.prototype.calculate=function(e,t){var r=this._fromEnd?t-500-this._startPos:this._startPos,n=this._fromEnd?t-500-this._endPos:this._endPos;if(e<r)return{level:this._startLevel,nextCalculatePosition:r-e};if(e<=n){var o=(e-r)/(n-r),i=Math.cos(o*Math.PI)/-2+.5,a=this._startLevel+(this._endLevel-this._startLevel)*i;return{level:a,nextCalculatePosition:e}}return{level:this._endLevel,nextCalculatePosition:1/0}},e}();t.Fade=i},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=function(){function e(){}return e}();t.BaseStreamUrlRetriever=n},function(e,t,r){"use strict";function n(e,t,r){return Math.min(t,Math.max(e,r))}var o=this&&this.__extends||function(){var e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])};return function(t,r){function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}}();Object.defineProperty(t,"__esModule",{value:!0});var i=r(0),a=r(3),s=i.eventDispatcher.EventDispatcher,u=i.helpers.Promise,l=i.helpers.deferred.buildDeferred,c=100,d=5e3,h=1500,p=function(e){function t(t,r){var n=e.call(this,t)||this;return n._onPreloadingEnabled=new s,n._onPreloadingDisabled=new s,n._onConnectionRequired=new s,n._onConnectionRecovered=new s,n._volumeAutomators=[],n._volumeScale=1,n._userVolume=1,n._volumeAutomationSupported=!1,n._timer=null,n._pauseFadeTimer=null,n._pauseFadeDeferred=null,n._pauseFade=null,n._connectionRequired=!1,n._connectionLossTimer=null,n.onPreloadingEnabled=n._onPreloadingEnabled.getHandle(),n.onPreloadingDisabled=n._onPreloadingDisabled.getHandle(),n.onConnectionRequired=n._onConnectionRequired.getHandle(),n.onConnectionRecovered=n._onConnectionRecovered.getHandle(),n._reloadStreamUrls=r,n._pausedMaxBufferLength=t.pausedMaxBufferLength,n._playingMaxBufferLength=t.playingMaxBufferLength,n._preloadingEnabled=t.preloadingEnabled,n.onPlayerProvided.subscribe(function(){return n._updateMaxBufferLength()}),n.onChange.subscribe(function(e){n.isDead()||((e.playing===!1||e.positionJumped||e.stalled||e.ended)&&n._completePauseFade(),n._pauseFade&&(e.actuallyPlaying===!1||e.ended)&&(n.removeVolumeAutomator(n._pauseFade),n._pauseFade=null),(e.positionJumped||void 0!==e.actuallyPlaying||void 0!==e.stalled)&&n._updateVolume(),void 0!==e.playing&&n._updateMaxBufferLength(),void 0!==e.loading&&n._calculateIfConnectionRequired())}),window.addEventListener("online",function(){return n._calculateIfConnectionRequired()}),window.addEventListener("offline",function(){return n._calculateIfConnectionRequired()}),n._calculateIfConnectionRequired(),n}return o(t,e),t.prototype.reload=function(){this._ensureNotDead(),this._reloadStreamUrls()},t.prototype.enablePreloading=function(){this.isDead()||this._preloadingEnabled||(this._preloadingEnabled=!0,this._updateMaxBufferLength(),this._onPreloadingEnabled.dispatch(void 0))},t.prototype.disablePreloading=function(){this.isDead()||this._preloadingEnabled&&(this._preloadingEnabled=!1,this._updateMaxBufferLength(),this._onPreloadingDisabled.dispatch(void 0))},t.prototype.isPreloadingEnabled=function(){return this._preloadingEnabled},t.prototype.pauseAfterFade=function(e){var t=this;if(this._ensureNotDead(),this._pauseFadeDeferred)return this._pauseFadeDeferred.promise;if(!this.isPlaying()||!this.isActuallyPlaying())return u.resolve(this.pause());var r=l();this._pauseFadeDeferred=r;var n=this.getPosition();if(this._pauseFade)throw new Error("Fade should not already be assigned.");return this._pauseFade=new a.Fade({startPos:n,endPos:n+e,startLevel:1,endLevel:0}),this.addVolumeAutomator(this._pauseFade),this._pauseFadeTimer=window.setTimeout(function(){t._pauseFadeDeferred=null,r.resolve(t.pause())},e+50),r.promise},t.prototype.isConnectionRequired=function(){return this._connectionRequired},t.prototype.getVolume=function(){return this._volumeAutomationSupported?this._userVolume:e.prototype.getVolume.call(this)},t.prototype.addVolumeAutomator=function(e){var t=this._volumeAutomators.indexOf(e);t<0&&(this._volumeAutomators.push(e),this._updateVolume())},t.prototype.removeVolumeAutomator=function(e){var t=this._volumeAutomators.indexOf(e);t>=0&&(this._volumeAutomators.splice(t,1),this._updateVolume())},t.prototype._triggerError=function(t){e.prototype._triggerError.call(this,t)},t.prototype.providePlayer=function(t,r,n){void 0===n&&(n=!0),this._volumeAutomationSupported=n,e.prototype.providePlayer.call(this,t,r)},t.prototype._setVolume=function(e){this._userVolume=e,this._calculateAndSetVolume()},t.prototype._kill=function(){this._timer&&window.clearTimeout(this._timer),null!==this._connectionLossTimer&&window.clearTimeout(this._connectionLossTimer),this._abortPauseFade(),e.prototype._kill.call(this)},t.prototype._calculateIfConnectionRequired=function(){var e=this,t=this.isLoading()&&"navigator"in window&&!window.navigator.onLine;t?null===this._connectionLossTimer&&(this._connectionLossTimer=window.setTimeout(function(){e._connectionLossTimer=null,e._connectionRequired=!0,e._onConnectionRequired.dispatch(void 0)},h)):this._connectionRequired?(this._connectionRequired=!1,this._onConnectionRecovered.dispatch(void 0)):null!==this._connectionLossTimer&&(window.clearTimeout(this._connectionLossTimer),this._connectionLossTimer=null)},t.prototype._completePauseFade=function(){if(this._pauseFadeDeferred){this._pauseFadeTimer&&window.clearTimeout(this._pauseFadeTimer);var e=this._pauseFadeDeferred;this._pauseFadeDeferred=null,e.resolve(this.pause())}},t.prototype._abortPauseFade=function(){this._pauseFadeTimer&&(window.clearTimeout(this._pauseFadeTimer),this._pauseFadeTimer=null),this._pauseFadeDeferred&&(this._pauseFadeDeferred.reject(new Error("Player was killed.")),this._pauseFadeDeferred=null)},t.prototype._updateVolume=function(){var e=this;if(this._volumeAutomationSupported){this._ensureNotDead(),this._timer&&(window.clearTimeout(this._timer),this._timer=null);var t=this.getDuration();if(null!==t){var r=this._volumeAutomators,o=this.getPosition(),i=1/0,a=1;r.forEach(function(e){var r=e.calculate(o,t),s=r.nextCalculatePosition,u=r.level;a*=n(0,1,u),s<i&&(i=s)}),this._volumeScale!==a&&(this._volumeScale=a,this._calculateAndSetVolume()),i<1/0&&this.isActuallyPlaying()&&!this.isStalled()&&(this._timer=window.setTimeout(function(){e._timer=null,e._updateVolume()},n(c,d,i-this.getPosition())))}}},t.prototype._calculateAndSetVolume=function(){this._volumeAutomationSupported?e.prototype._setVolume.call(this,this._userVolume*this._volumeScale):e.prototype._setVolume.call(this,this._userVolume)},t.prototype._updateMaxBufferLength=function(){var e=this.getPlayer(),t=e&&e.getBufferController();t&&(this.isPlaying()?t.setMaxBufferLength(this._playingMaxBufferLength):t.setMaxBufferLength(this._preloadingEnabled?this._pausedMaxBufferLength:0))},t}(i.ProxyPlayer);t.Player=p},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(29);t.renditions=n.renditions},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=function(){function e(e){this.statusCode=e}return e.prototype.getStatusCode=function(){return this.statusCode},e}();t.RequestError=n},function(e,t,r){"use strict";function n(e){return e.match(s)[0]}function o(e,t){if(t instanceof e.errors.RetrievalError){var r=t.getCause();if(r instanceof e.retrievalErrors.UnacceptableResponseStatusCodeError)return 403===r.getStatusCode()}return!1}function i(e,t,r,i,s,u,l,c,d){d=a.logger.prefixLogger(d,"HLSMSEPlayer Controller");var h=null,p=!1,f=n(c);r.onError.subscribe(function(t){if(!(t instanceof a.errors.NotSupportedError)){if(i){if(t instanceof a.errors.URLUpdateError)return d.error("URL refresh failed for some reason.",t),void s({retryPlayer:!0});if(o(e,t)){if(p)return;return d.info("Got a 403 status code. Peforming a URL refresh..."),p=!0,h=l.getUrl(),void h.whenComplete().then(function(e){if(e){var t=e.url,o=e.rendition;n(t)!==f||JSON.stringify(u)!==JSON.stringify(o)?(d.warn("Got a new URL but the rendition did not match the original."),s({retryPlayer:!1})):(p=!1,d.info("Got a new URL. Updating..."),r.getUrlController().updateUrl(t))}else d.warn("Could not get a new URL."),s({retryPlayer:!1})}).catch(function(e){d.error("Unexpected error when trying to retrieve a new URL.",e),s({retryPlayer:!1})})}}d.error("Unexpected player error.",t),s({retryPlayer:!1})}}),t.providePlayer(r)}Object.defineProperty(t,"__esModule",{value:!0});var a=r(0),s=/^[^\?#]*/;t.isErrorWhichShouldTriggerURLRefresh=o,t.takeControlHLSMSEPlayer=i},function(e,t,r){"use strict";var n=this&&this.__extends||function(){var e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])};return function(t,r){function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}}();Object.defineProperty(t,"__esModule",{value:!0});var o=r(1),i=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return n(t,e),t.prototype.getCode=function(){return"SCAUDIO.GEOBLOCKED_ERROR"},t}(o.ApiError);t.GeoBlockedError=i},function(e,t,r){"use strict";var n=this&&this.__extends||function(){var e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])};return function(t,r){function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}}();Object.defineProperty(t,"__esModule",{value:!0});var o=r(2),i=function(e){function t(){return e.call(this,"There were no stream URLs.")||this}return n(t,e),t.prototype.getCode=function(){return"SCAUDIO.NO_STREAMS"},t}(o.NotSupportedError);t.NoStreamsError=i},function(e,t,r){"use strict";var n=this&&this.__extends||function(){var e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])};return function(t,r){function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}}();Object.defineProperty(t,"__esModule",{value:!0});var o=r(1),i=function(e){function t(){return e.call(this,null,"Request timed out too many times.")||this}return n(t,e),t.prototype.getCode=function(){return"SCAUDIO.TIMED_OUT_ERROR"},t}(o.ApiError);t.TimedOutError=i},function(e,t,r){"use strict";var n=this&&this.__extends||function(){var e=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])};return function(t,r){function n(){this.constructor=t}e(t,r),t.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n)}}();Object.defineProperty(t,"__esModule",{value:!0});var o=r(1),i=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return n(t,e),t.prototype.getCode=function(){return"SCAUDIO.UNAVAILABLE_ERROR"},t}(o.ApiError);t.UnavailableError=i},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n,o=r(1),i=r(9),a=r(2),s=r(11),u=r(12),l=r(10);!function(e){e.ApiError=o.ApiError,e.GeoBlockedError=i.GeoBlockedError,e.NotSupportedError=a.NotSupportedError,e.TimedOutError=s.TimedOutError,e.UnavailableError=u.UnavailableError,e.NoStreamsError=l.NoStreamsError}(n=t.errors||(t.errors={}))},function(e,t,r){"use strict";function n(){return re?re:(re=document.createElement("audio"),o(re),re)}function o(e){e.load()}function i(e){return e===Q||e===X}function a(e){return e.constructor===X}function s(e){return e.constructor===Q}function u(e){return e.constructor===Z}function l(e){return e.constructor===$}function c(e){var t=e.split("//",2);return 1===t.length?t[0].split("/",1)[0]:t[1]?t[1].split("/",1)[0]:""}function d(e){var t=ee.exec(e);return t&&t[0]||""}function h(e,t){var r=s(e)?"MaestroHTML5":a(e)?"MaestroHLSMSE":u(e)?"MaestroFlipper":l(e)?"MaestroChromecast":null;if(!r)throw new Error("Unknown player.");return{name:r,bitrate:t.bitrate,protocol:t.rendition.scProtocol,host:c(t.url),url:d(t.url),format:t.rendition.scFormat}}function p(){for(var e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",t="",r=0;r<20;r++)t+=e.charAt(Math.floor(Math.random()*e.length));return t}function f(e){if("number"!=typeof e)throw new Error("level must be a number.");if(e<0||e>1)throw new Error("Invalid volume level.");se=e,ae.forEach(function(t){return t.setVolume(e)})}function _(){return se}function g(e){if("boolean"!=typeof e)throw new Error("muteEnabled must be a boolean.");ue=e,ae.forEach(function(t){return t.setMuted(e)})}function y(){return ue}function v(){n()}function m(e){function t(){return Ae&&Me?h(Ae,Me):null}function r(){if(De&&window.clearTimeout(De),Pe.debug("Performing retrieve."),ke)throw new Error("Player job already running. Only one instance of the job is allowed at once.");if(Re.isDead())throw new Error("Proxy is dead.");var e=new q(function(){function e(){function t(e){if(e!==E.helpers.abortableJob.abortedError)if(e instanceof A.RequestError){var t=e.getStatusCode();switch(t){case 401:Re._triggerError(new M.GeoBlockedError(t,"Geoblocked (logged out)."));break;case 403:Re._triggerError(new M.GeoBlockedError(t,"Geoblocked (logged in)."));break;case 404:Re._triggerError(new x.UnavailableError(t,"Track unavailable."));break;case null:throw new Error("Status code should not be null.");default:Re._triggerError(new k.ApiError(t))}}else e===E.helpers.retry.noMoreAttemptsError?Re._triggerError(new O.TimedOutError):(Pe.error("Unexpected error.",e),Re._triggerError(new E.errors.PlayerFatalError("An unexpected error occurred.",e)))}s=o(),s.onCompletion(function(r){if(r)try{Me=r,Te||(Te=a());var o=Te[0];o?n():(Pe.debug("Excluding rendition.",r.rendition),c.excludeRendition(r.rendition),Te=null,e())}catch(e){t(e)}else Me?(Pe.error("There were no stream formats that were supported."),Re._triggerError(new D.NotSupportedError)):(Pe.error("There were no streams available."),Re._triggerError(new V.NoStreamsError))}),s.onError(t)}function n(){function e(e){if(!u&&!i&&(u=!0,Pe.debug("Player releasing control.",e),t.abort(e),!Re.isDead()))if(e&&e.retryPlayer){var n=Oe.getDelay();n>0?(Pe.debug("Waiting "+n+" ms."),De=window.setTimeout(function(){return r()},n)):r()}else r()}var n=Te&&Te[0];if(!n)throw new Error("No player to build.");if(!Me)throw new Error("No rendition.");var o=Me.url,a=Me.rendition,s=new E.Descriptor(o,a.maestroProtocol,a.maestroFormat),u=!1;Pe.debug("Building player...");var l=void 0,c=void 0;try{c=n(s,Me,e)}catch(e){l=e}void 0===c?(Pe.error("Exception occurred whilst building player.",l),e()):null===c?(Pe.debug("Player not supported for current descriptor."),e()):(Ae=c,Pe.debug("Built player."),Ae.isDead()?(Pe.debug("Player died during construction."),e()):(le.addPlayer(Ae),Ae.onChange.subscribe(function(t){var r=t.dead;r&&(Pe.debug("Player died."),e())})))}var i=!1,s=null;return e(),{result:E.helpers.deferred.buildDeferred().promise,abort:function(e){i=!0,Pe.info("Player job aborted.",e),ke=null,s&&s.abort(),Te&&(e&&e.retryPlayer?Pe.debug("Player might be used again for current rendition."):(Pe.debug("Player will not be used again for current rendition."),Te.shift()),Re.getPlayer()&&Re.removePlayer(),Ae&&(Ae.kill(),Ae=null),Me=null)}}}),t=e.run();return ke=t}function o(){return z(function(){return new q(function(){var e=c.getUrl();Pe.debug("Retrieving a URL...");var t=e.whenComplete().then(function(e){return e?Pe.debug("Retrieved URL.",{rendition:e.rendition,bitrate:e.bitrate}):Pe.debug("No URL provided."),e&&te.indexOf(e.rendition)<0?(Pe.warn("Unknown rendition. Skipping...",e.rendition),{success:!1}):{result:e,success:!0}}).catch(function(e){if(e instanceof A.RequestError){var t=e.getStatusCode();if(null===t||0===t)return null===t?Pe.warn("Timed out when retrieving URL. Will retry."):Pe.warn("Network error when retrieving URL. Will retry."),{success:!1}}throw e!==E.helpers.abortableJob.abortedError&&Pe.error("Error retrieving URL.",e),e});return{result:t,abort:function(){return e.abort()}}})},ge)}function a(){var e=[];return $&&l.indexOf($)>=0&&(Pe.debug("ChromecastPlayer found.",Y.version),me?e.push(function(e){var t=new $(e,{name:Ee,castContext:me,logger:re});return Re.providePlayer(t,{syncPosition:!1,syncVolume:!1},!1),t}):Pe.warn("Could not construct chromecast player because context not provided.")),Z&&l.indexOf(Z)>=0&&(Pe.debug("FlipperPlayer found.",W.version),e.push(function(e){var t=new Z(e,{name:Ee,logger:re});return I.takeControlFlipperPlayer(Re,t,Pe,xe||void 0),t})),X&&l.indexOf(X)>=0&&(Pe.debug("HLSMSEPlayer found.",J.version),e.push(function(e,t,r){var n=new X(e,{name:Ee,playlistLoader:b.stringLoader,segmentLoader:b.arrayBufferLoader,keyLoader:b.arrayBufferLoader,expectedSegmentFormat:{mimeType:"audio/mpeg"},logger:re});return u(n,function(){return r()}),L.takeControlHLSMSEPlayer(J,Re,n,ve,r,t.rendition,c,t.url,Pe),n})),Q&&l.indexOf(Q)>=0&&(Pe.debug("HTML5Player found.",K.version),e.push(function(e,t,r){var n=t.timeRetrieved;if(ve&&("hls"===e.getProtocol().name||void 0===n))return null;var o;if(ve){if(void 0===n)throw new Error("Expecting timeUrlRetrieved to be set.");o={urlExpires:!0,timeUrlRetrieved:n}}else o={urlExpires:!1};var i=new Q(e,{name:Ee,logger:re});return u(i,function(){return r()}),C.takeControlHTML5Player(K,Re,i,o,r,Pe),i})),e}function s(){ke?(Pe.debug("Reloading stream URLs..."),Pe.debug("Aborting player job that is in progress."),ke.abort(),Te=null,r()):Pe.debug("Reload requested, but not reloading as there is nothing to reload.")}function u(e,t){function r(){var t=e.getMediaElement();t&&t!==n()&&(Pe.debug("Revoking audio element that was created internally because player is ready now."),e.revokeMediaElement())}function o(){var r=e.getMediaElement();if(r&&r!==n()&&(Pe.debug("Revoking audio element that was created internally, even though player is not ready."),e.revokeMediaElement()),!e.getMediaElement()){ne&&!ne.isDead()&&(Pe.info("Revoking audio element from a player."),ne.isPlaying()&&Pe.warn("The audio element is being revoked from a player which is playing. Only one player should be playing at once."),ne.revokeMediaElement()),ne=e,Pe.info("Providing audio element to a different player.");var o=oe={};e.provideMediaElement(n()).catch(function(r){e.isDead()||oe!==o||(Pe.error("An unexpected error occurred when trying to provide the audio element to a player.",r),t())})}}e.isReady()?r():e.onReady.subscribe(r),Re.onPlayIntent.subscribe(function(){e.isDead()||o()}),Re.isPlaying()&&(e.isDead()||o()),ne||o()}var l=e.playerClasses,c=e.streamUrlRetriever,d=e.duration,f=void 0===d?null:d,_=e.preloadingEnabled,g=void 0!==_&&_,y=e.pausedMaxBufferLength,v=void 0===y?2e3:y,m=e.playingMaxBufferLength,N=void 0===m?9e4:m,B=e.fadeOutDuration,H=void 0===B?0:B,ee=e.logger,re=void 0===ee?E.logger.noOpLogger:ee,ce=e.audioPerformanceReporter,de=e.audioReporter,he=e.audioCheckpointInterval,pe=void 0===he?3e4:he,fe=e.errorReporter,_e=e.urlProviderRetryDelayCalculator,ge=void 0===_e?G():_e,ye=e.streamUrlsExpire,ve=void 0===ye||ye,me=e.chromecastContext;if(!(c instanceof w.BaseStreamUrlRetriever))throw new Error("StreamUrlRetriever invalid.");if(null!==f&&("number"!=typeof f||f<0))throw new Error("duration invalid.");if("boolean"!=typeof g)throw new Error("preloadingEnabled invalid.");if(null!==v&&("number"!=typeof v||v<0))throw new Error("pausedMaxBufferLength invalid.");if(null!==N&&("number"!=typeof N||N<0))throw new Error("playingMaxBufferLength invalid.");if(null!==H&&("number"!=typeof H||H<0))throw new Error("fadeOutDuration invalid.");if(null!==re&&"function"!=typeof re&&"object"!=typeof re)throw new Error("logger invalid.");if(void 0!==de&&"function"!=typeof de)throw new Error("audioReporter invalid.");if(null!==pe&&("number"!=typeof pe||pe<0))throw new Error("audioCheckpointInterval invalid.");if(void 0!==ce&&"function"!=typeof ce)throw new Error("audioPerformanceReporter invalid.");if(void 0!==fe&&"function"!=typeof fe)throw new Error("errorReporter invalid.");if(void 0!==ge&&"function"!=typeof ge)throw new Error("retryDelayCalculator invalid.");var Ee="SCAudio-"+ ++ie,be=c.getTrackId();null!==be&&(Ee+="-"+be);var we=new F.LogCollector;re=E.logger.cloneLogger(we,re);var Pe=E.logger.prefixLogger(re,Ee),Se=p();Pe.info("Building player...",{ua:navigator.userAgent,logId:Se});var Re=new T.Player({name:Ee+"-Proxy",logger:re,mediaSessionEnabled:!0,pausedMaxBufferLength:v,playingMaxBufferLength:N,preloadingEnabled:g},s);ae.push(Re),Re.setVolume(se),Re.setMuted(ue),H>0&&Re.addVolumeAutomator(P.buildFadeOut(H));var Te=null,Ae=null,Me=null,ke=null,xe=null,De=null,Oe=new j.DecayingExponentialDelayCalculator;if(ce&&(xe=new S.AudioPerformanceEventGenerator(Re,ce,Pe,t,X)),de&&new U.AudioEventGenerator(Re,de,pe,Pe),fe&&R.generateErrorEvents(Re,we,Se,be,fe,Pe,t,J||null,ve),Re.onChange.subscribe(function(e){var t=e.dead,r=e.playing;if(t)Pe.info("Player killed."),ae.splice(ae.indexOf(Re),1),ke&&ke.abort(),De&&window.clearTimeout(De);else if(r===!0){var o=l.some(function(e){return i(e)});o&&n()}}),null!==f&&(Pe.debug("Setting initial duration.",f),Re.setInitialDuration(f)),g)Pe.debug("Preloading is enabled, so performing retrieve immediately."),r();else{Pe.debug("Preloading is disabled, so deferring retrieve until either a play intent or preloading is enabled.");var Ce=function(){Le.remove(),Ie.remove(),Pe.debug("Preloading now enabled or received a play request. Peforming retrieve."),r()},Le=Re.onPreloadingEnabled.subscribe(Ce),Ie=Re.onPlayIntent.subscribe(Ce)}return Re}Object.defineProperty(t,"__esModule",{value:!0});var E=r(0),b=r(35),w=r(4),P=r(3),S=r(17),R=r(22),T=r(5),A=r(7),M=r(9),k=r(1),x=r(12),D=r(2),O=r(11),C=r(20),L=r(8),I=r(19),N=r(6),j=r(21),F=r(23),U=r(16),B=r(18),q=E.helpers.abortableJob.AbortableJob,H=E.helpers.retry,z=H.retry,G=H.buildExponentialDelayCalculator,V=r(10),K=void 0;try{K=r(34)}catch(e){}var J=void 0;try{J=r(33)}catch(e){}var W=void 0;try{W=r(32)}catch(e){}var Y=void 0;try{Y=r(31)}catch(e){}var Q=K?K.HTML5Player:null,X=J?J.HLSMSEPlayer:null,Z=W?W.FlipperPlayer:null,$=Y?Y.ChromecastPlayer:null,ee=/^[^?#]*/,te=Object.keys(N.renditions).map(function(e){return N.renditions[e]}),re=null,ne=null,oe={},ie=-1,ae=[],se=1,ue=!1,le=new B.CacheManager(15e7,E.logger.noOpLogger);t.setGlobalVolume=f,t.getGlobalVolume=_,t.setGlobalMuted=g,t.getGlobalMuted=y,t.activateAudioElement=v,t.buildPlayer=m},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n,o=r(3);!function(e){e.Fade=o.Fade,e.buildFadeIn=o.buildFadeIn,e.buildFadeOut=o.buildFadeOut}(n=t.volumeAutomation||(t.volumeAutomation={}))},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(0),o=1e3,i=function(){function e(e,t,r,i){this._checkpointTimer=null,this._logger=n.logger.prefixLogger(i,"AudioEventGenerator"),this._player=e,this._eventReporter=t,this._checkpointInterval=null!==r?Math.max(o,r):null,this._startReporting()}return e.prototype._startReporting=function(){var e=this,t=this._player;t.onChange.subscribe(function(r){var n=r.actuallyPlaying,o=r.ended;n===!0&&!t.isEnded()||o===!1&&t.isActuallyPlaying()?(null===e._checkpointInterval||e._checkpointTimer||(e._checkpointTimer=window.setInterval(function(){e._reportEvent("checkpoint")},e._checkpointInterval)),e._reportEvent("play")):(n===!1&&!t.isEnded()||o===!0&&t.isActuallyPlaying())&&(e._checkpointTimer&&(window.clearInterval(e._checkpointTimer),e._checkpointTimer=null),e._reportEvent("pause"))})},e.prototype._reportEvent=function(e){var t=this._player.getDuration();if(null===t)throw new Error("Duration should exist now.");var r={type:e,position:this._player.getPosition(),duration:t};this._logger.debug("Generated audio event.",r),this._eventReporter(r)},e}();t.AudioEventGenerator=i},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(0),o=r(30),i=function(){function e(e,t,r,o,i){this._logger=n.logger.prefixLogger(r,"AudioPerformanceEventGenerator"),this._player=e,this._eventReporter=t,this._getPlayerDetails=o,this._HLSMSEPlayer=i,this._measureGeneralEvents()}return e.prototype.reportManualEvent=function(e){this._logger.debug("Reporting manual audio performance event.",e),this._eventReporter(e)},e.prototype._measureGeneralEvents=function(){var e=this,t=this._player,r=new o.Timer,n=null,i=null;t.onChange.subscribe(function(a){var s=a.dead,u=a.playing,l=a.actuallyPlaying,c=a.seeking,d=a.loading;s||(u===!0&&(r.isComplete()||r.start()),l===!0&&(r.isComplete()||(r.stop(),e._reportEvent("play",r.getTime()))),c===!0&&t.isReady()&&(n=new o.Timer,n.start()),c===!1&&n&&(n.stop(),e._reportEvent("seek",n.getTime())),d===!0&&r.isComplete()&&(i=new o.Timer,i.start()),d===!1&&i&&(i.stop(),e._reportEvent("buffer",i.getTime())))})},e.prototype._reportEvent=function(e,t,r){var n=r||this._getPlayerDetails();if(!n)return void this._logger.warn("Cannot report event because there is no player.",e,t);var o={type:e,latency:t,protocol:n.protocol,playerType:n.name,host:n.host,bitrate:n.bitrate,format:n.format||void 0};this._logger.debug("Generated audio performance event.",o),this._eventReporter(o)},e}();t.AudioPerformanceEventGenerator=i},function(e,t,r){"use strict";function n(e,t){var r=e.getMemoryCacheController();r&&r.setMaxCacheSize(t)}Object.defineProperty(t,"__esModule",{value:!0});var o=r(0),i=2e4,a=function(){function e(e,t){this._maxCacheSize=e,this._players=[],this._updateTimer=null,this._logger=o.logger.prefixLogger(t,"CacheManager"),this._logger.debug("Initialized with cache size "+e+" bytes.")}return e.prototype.addPlayer=function(e){var t=this;if(this._logger.debug("Adding player to cache manager."),e.isDead())return void this._logger.debug("Player was dead.");var r=this._players;e.onChange.subscribe(function(n){var o=n.playing,i=n.dead;i===!0?(t._logger.debug("Removing player that became dead."),r.splice(r.indexOf(e),1),t._update()):o===!0?(t._logger.debug("Updating because player started playing."),r.splice(r.indexOf(e),1),r.unshift(e),t._update()):o===!1&&(t._logger.debug("Updating because player became paused."),t._update())}),e.isPlaying()?r.unshift(e):r.push(e),this._update()},e.prototype._update=function(){var e=this;if(this._updateTimer&&(window.clearTimeout(this._updateTimer),this._updateTimer=null),0===this._players.length)return void this._logger.debug("There are no longer any players to manage.");var t=this._players.reduce(function(e,t){return t.isPlaying()?e.playingPlayers.push(t):e.pausedPlayers.push(t),e},{playingPlayers:[],pausedPlayers:[]}),r=t.playingPlayers,o=t.pausedPlayers,a=r.reduce(function(e,t){return e+(t.getMemoryCacheUsage()||0)},0),s=o.reduce(function(e,t){return e+(t.getMemoryCacheUsage()||0)},0);if(a>this._maxCacheSize){this._logger.debug("All playing players are using more than the max cache size. Cleaning...",a,this._maxCacheSize);var u=this._maxCacheSize/r.length;r.forEach(function(e){return n(e,u)}),o.forEach(function(e){return n(e,0)})}else this._logger.debug("Recalculating cache sizes...",a+s,this._maxCacheSize),r.concat(o).reduce(function(t,r){return n(r,Math.max(0,e._maxCacheSize-t)),
@@ -62452,7 +62478,7 @@ return t.rendition===e}).map(function(e){return{url:e.url,bitrate:e.bitrate}}),a
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10).setImmediate, __webpack_require__(10).clearImmediate))
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -62645,7 +62671,7 @@ return t.rendition===e}).map(function(e){return{url:e.url,bitrate:e.bitrate}}),a
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(4)))
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62677,6 +62703,7 @@ exports.default = function (player) {
   this.bufferLength;
   this.controls = [];
   init();
+
   function init() {
     self.canvas.width = self.width;
     self.canvas.height = self.height;
@@ -62770,7 +62797,20 @@ exports.default = function (player) {
     ctx.fillText('Buffer Size: ' + _this.bufferLength, _this.width - 110, 30);
     _this.updateControlPoint();
   };
-
+  this.hide = function () {
+    _this.container.style.display = 'none';
+  };
+  this.show = function () {
+    _this.subContainer.style.display = 'block';
+  };
+  this.toggleShow = function () {
+    if (_this.container.style.display == 'none') {
+      _this.container.style.display = 'block';
+    } else {
+      _this.container.style.display = 'none';
+    }
+  };
+  this.hide();
   // let sampleAudioStream = function () {
   //   analyser.getByteFrequencyData(self.streamData)
   //       // calculate an overall volume value
@@ -62797,7 +62837,7 @@ exports.default = function (player) {
 };
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62849,7 +62889,7 @@ Math.easing = {
 };
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -62868,7 +62908,7 @@ var AudioAnalyzer = function () {
     _classCallCheck(this, AudioAnalyzer);
 
     this.options = options || new Object();
-    this.debug = this.options.debug || true;
+    this.debug = this.options.debug || false;
     this.audioElement = this.options.audioElement || undefined;
     this.audioElement.crossOrigin = 'anonymous';
     this.url = this.options.url;
